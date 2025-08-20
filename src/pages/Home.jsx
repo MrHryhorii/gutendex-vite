@@ -8,6 +8,8 @@ const Home = () => {
     const [books, setBooks] = useState([]);
     const [dataIsLoaded, setDataIsLoaded] = useState(false);
 
+    const [pages, setPages] = useState({next: null, previous: null});
+
     // function to get data
     useEffect(() => {
         fetch('https://gutendex.com/books')
@@ -15,9 +17,11 @@ const Home = () => {
         .then(data => {
             // Handle the fetched data here
             setBooks(data.results);
+            setPages({next: data.next, previous: data.previous});
             setDataIsLoaded(true);
 
             console.log(data.results);
+            console.log(data);
         })
         .catch(error => {
             // Handle any errors
@@ -44,6 +48,10 @@ const Home = () => {
                     <li key={book.id}>{book.title}</li>
                     ))}
                 </ul>
+                <p>Next</p>
+                <p>{pages.next}</p>
+                <p>Previous</p>
+                <p>{pages.previous}</p>
             </div>
         </>
     )
