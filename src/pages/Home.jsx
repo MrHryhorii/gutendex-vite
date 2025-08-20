@@ -9,6 +9,8 @@ const Home = () => {
     const [dataIsLoaded, setDataIsLoaded] = useState(false);
     // page links
     const [pages, setPages] = useState({next: null, previous: null});
+    // book count
+    const [count, setCount] = useState(0);
     // current page
     const [urlData, setUrlData] = useState("https://gutendex.com/books");
     // search link for name
@@ -23,6 +25,7 @@ const Home = () => {
             // Handle the fetched data here
             setBooks(data.results);
             setPages({next: data.next, previous: data.previous});
+            setCount(data.count);
             setDataIsLoaded(true);
         })
         .catch(error => {
@@ -57,12 +60,13 @@ const Home = () => {
                 <div>
                     <input
                         placeholder="Search…"
-                        onChange={e => setNameLink("https://gutendex.com/books?search=" + e.target.value.toLowerCase())}
+                        value={nameLink}
+                        onChange={e => setNameLink(e.target.value)}
                     />
-                    <button onClick={() => setUrlData(nameLink)}>Find!</button>
+                    <button onClick={() => setUrlData("https://gutendex.com/books?search=" + nameLink.trim().toLowerCase())}>Find!</button>
                 </div>
                  {/* Array with return data */}
-                <p>Book List</p>
+                <p>Book List: All - {count}, On page - {books.length}</p>
                 <ul>
                     {books.map(book => (
                     <li key={book.id}>{book.title}</li>
