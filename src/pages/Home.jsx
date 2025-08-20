@@ -11,6 +11,8 @@ const Home = () => {
     const [pages, setPages] = useState({next: null, previous: null});
     // current page
     const [urlData, setUrlData] = useState("https://gutendex.com/books");
+    // search link for name
+    const [nameLink, setNameLink] = useState("");
 
     // function to get data
     useEffect(() => {
@@ -42,6 +44,7 @@ const Home = () => {
         <>
             <div>Home</div>
             <div>
+                {/* Next and Previous buttons */}
                 <div>
                     {pages.previous && (
                         <button onClick={() => setUrlData(pages.previous)}>Previous</button>
@@ -50,7 +53,15 @@ const Home = () => {
                         <button onClick={() => setUrlData(pages.next)}>Next</button>
                     )}
                 </div>
-
+                {/* Search field and button */}
+                <div>
+                    <input
+                        placeholder="Search…"
+                        onChange={e => setNameLink("https://gutendex.com/books?search=" + e.target.value.toLowerCase())}
+                    />
+                    <button onClick={() => setUrlData(nameLink)}>Find!</button>
+                </div>
+                 {/* Array with return data */}
                 <p>Book List</p>
                 <ul>
                     {books.map(book => (
