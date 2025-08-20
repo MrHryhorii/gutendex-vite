@@ -7,12 +7,15 @@ const Home = () => {
     // vars
     const [books, setBooks] = useState([]);
     const [dataIsLoaded, setDataIsLoaded] = useState(false);
-
+    // page links
     const [pages, setPages] = useState({next: null, previous: null});
+    // current page
+    const [urlData, setUrlData] = useState("https://gutendex.com/books");
 
     // function to get data
     useEffect(() => {
-        fetch('https://gutendex.com/books')
+        setDataIsLoaded(false);
+        fetch(urlData)
         .then(response => response.json())
         .then(data => {
             // Handle the fetched data here
@@ -27,7 +30,7 @@ const Home = () => {
             // Handle any errors
             console.error('Error:', error);
         });
-    }, []);
+    }, [urlData]); // do on url data change
     // no data content
     if (!dataIsLoaded) {
         return (
