@@ -22,9 +22,6 @@ const Home = () => {
             setBooks(data.results);
             setPages({next: data.next, previous: data.previous});
             setDataIsLoaded(true);
-
-            console.log(data.results);
-            console.log(data);
         })
         .catch(error => {
             // Handle any errors
@@ -45,16 +42,21 @@ const Home = () => {
         <>
             <div>Home</div>
             <div>
+                <div>
+                    {pages.previous && (
+                        <button onClick={() => setUrlData(pages.previous)}>Previous</button>
+                    )}
+                    {pages.next && (
+                        <button onClick={() => setUrlData(pages.next)}>Next</button>
+                    )}
+                </div>
+
                 <p>Book List</p>
                 <ul>
                     {books.map(book => (
                     <li key={book.id}>{book.title}</li>
                     ))}
-                </ul>
-                <p>Next</p>
-                <p>{pages.next}</p>
-                <p>Previous</p>
-                <p>{pages.previous}</p>
+                </ul>                
             </div>
         </>
     )
