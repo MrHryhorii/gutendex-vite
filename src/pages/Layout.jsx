@@ -5,6 +5,7 @@ export default function Layout() {
         <div style={{ padding: 20 }}>
             <nav style={{ display: "flex", gap: 12 }}>
                 <NavLink to="/">Home</NavLink>
+                <NavLink to="/favorite">Favorite books</NavLink>
             </nav>
             <hr />
             <Outlet />
