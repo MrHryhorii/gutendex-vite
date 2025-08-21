@@ -16,6 +16,41 @@ const Home = () => {
     // search link for name
     const [nameLink, setNameLink] = useState("");
 
+
+    // category
+    const categories = ["Fiction", "Mystery", "Thriller", "Romance", "Fantasy", "Morality", "Society", "Power", "Justice", "Adventure", "Tragedy", "War", "Philosophy"];
+    // category helper
+    const byCategory = (c) => {
+        let tag = c.trim();
+        setUrlData("https://gutendex.com/books?search=" + tag);
+    };
+    // create category buttons
+    const catButtons = () => {
+        return (
+            <div>
+                <button onClick={() => {
+                        byCategory("");
+                        setCat("All");
+                    }
+                    }>All</button>
+                {categories.map(cat => (
+                    <button
+                        key={cat}
+                        onClick={() => {
+                            byCategory(cat);
+                            setCat(cat);
+                            }
+                        }
+                        >{cat}</button>
+                    ))
+                }
+            </div>
+        );
+    };
+    // show category result
+    const [cat, setCat] = useState("All");
+
+    
     // function to get data
     useEffect(() => {
         setDataIsLoaded(false);
@@ -65,8 +100,12 @@ const Home = () => {
                     />
                     <button onClick={() => setUrlData("https://gutendex.com/books?search=" + nameLink.trim().toLowerCase())}>Find!</button>
                 </div>
-                 {/* Array with return data */}
-                <p>Book List: All - {count}, On page - {books.length}</p>
+                {/* Category menu */}
+                <p>Category menu</p>
+                {catButtons()}
+                
+                {/* Array with return data */}
+                <p>Book List: {cat} - {count}, On page - {books.length}</p>
                 <ul>
                     {books.map(book => (
                     <li key={book.id}>{book.title}</li>
