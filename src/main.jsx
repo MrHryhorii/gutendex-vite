@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import Favorite from './pages/Favorite';
+import Detail from './pages/Detail';
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,8 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Home /> },
-      { path: "favorite", element: <Favorite /> }
+      { path: "favorite", element: <Favorite /> },
+      { path: "book/:id", element: <Detail />}
     ],
   },
 ]);

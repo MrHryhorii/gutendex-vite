@@ -104,12 +104,19 @@ const Home = () => {
                 <p>Category menu</p>
                 {catButtons()}
                 
+                {/* BOOKS */}
                 {/* Array with return data */}
                 <p>Book List: {cat} - {count}, On page - {books.length}</p>
                 <ul>
-                    {books.map(book => (
-                    <li key={book.id}>{book.title}</li>
-                    ))}
+                    {
+                        books.map(book => (
+                            <li key={book.id}>
+                                <Link to={`/book/${book.id}`}>
+                                    {book.title}
+                                </Link>
+                            </li>
+                        ))
+                    }
                 </ul>                
             </div>
         </>
