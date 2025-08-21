@@ -25,7 +25,7 @@ const Detail = () => {
             // Handle any errors
             console.error('Error:', error);
         });
-    }, []);
+    }, [id]); // repeat on id is changed
     // no data content
     if (!dataIsLoaded) {
         return (
