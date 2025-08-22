@@ -2,6 +2,8 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import { Link, useParams } from "react-router-dom";
 
+import {onToggle} from "../localfav.js";
+
 const Detail = () => {
 
     const { id } = useParams();
@@ -141,6 +143,9 @@ const Detail = () => {
             <div>Detail</div>
             <p><b>Title:</b> {book.title}</p>
             <img src={book.formats["image/jpeg"]} alt="Cover" />
+
+            <button onClick={onToggle(book)}>Add to favorite</button>
+            
             <p><b>Author:</b> {author}</p>
             <p><b>Number of downloads:</b> {book.download_count}</p>
             <p><b>Category:</b> {category}</p>
