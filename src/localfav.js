@@ -25,6 +25,17 @@ export function removeFavorite(id) {
     saveFavorites(old.filter(b => b.id !== id));
 }
 
+// check if in list
+export function isInList(id) {
+    const arr = loadFavorites();
+
+    if (arr.find((obj) => obj.id === id)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
 /////////////////////////////////////////////////////////////////////////////
 

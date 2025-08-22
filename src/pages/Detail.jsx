@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import { Link, useParams } from "react-router-dom";
 
-import {onToggle} from "../localfav.js";
+import {onToggle, isInList, removeFavorite} from "../localfav.js";
 
 const Detail = () => {
 
@@ -17,6 +17,8 @@ const Detail = () => {
     const [category, setCategory] = useState("");
     const [lang, setLang] = useState("");
     const [summaries, setSummaries] = useState("");
+
+    const [favBtn, setFavBtn] = useState(false);
 
     // get string with author names
     const getAuthors = (book) => {
@@ -117,6 +119,9 @@ const Detail = () => {
             setCategory(getCategories(data));
             setLang(getLanguages(data));
             setSummaries(getSummaries(data));
+
+            setFavBtn(isInList(data.id));
+
             setDataIsLoaded(true);
         })
         .catch(error => {
@@ -144,8 +149,16 @@ const Detail = () => {
             <p><b>Title:</b> {book.title}</p>
             <img src={book.formats["image/jpeg"]} alt="Cover" />
 
-            <button onClick={onToggle(book)}>Add to favorite</button>
-            
+            {
+                favBtn ? 
+                (
+                    <button onClick={() => {removeFavorite(book.id); setFavBtn(v => !v)}}>Remove from favorite</button>
+                ) : 
+                (
+                    <button onClick={() => {onToggle(book); setFavBtn(v => !v)}}>Add to favorite</button>
+                )
+            }
+
             <p><b>Author:</b> {author}</p>
             <p><b>Number of downloads:</b> {book.download_count}</p>
             <p><b>Category:</b> {category}</p>
