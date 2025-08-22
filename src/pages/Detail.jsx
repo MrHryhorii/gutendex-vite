@@ -14,6 +14,7 @@ const Detail = () => {
     const [author, setAuthor] = useState("");
     const [category, setCategory] = useState("");
     const [lang, setLang] = useState("");
+    const [summaries, setSummaries] = useState("");
 
     // get string with author names
     const getAuthors = (book) => {
@@ -72,6 +73,35 @@ const Detail = () => {
 
         return lang;
     }
+    // get summaries
+    const getSummaries = (book) => {
+        let summ = "";
+        const arr = book.summaries;
+
+        for(let i = 0; i < arr.length; i++)
+        {
+            summ += arr[i];
+
+            if(i + 1 < arr.length){
+                summ += '; ';
+            }
+            else{
+                summ.trim();
+                if(summ)
+                {
+                    if (summ.slice(-1) != '.')
+                    {
+                        summ += '.';
+                    }
+                }
+                else{
+                    summ = "---";
+                }
+            }
+        }
+
+        return summ;
+    }
 
     // function to get data
     useEffect(() => {
@@ -84,6 +114,7 @@ const Detail = () => {
             setAuthor(getAuthors(data));
             setCategory(getCategories(data));
             setLang(getLanguages(data));
+            setSummaries(getSummaries(data));
             setDataIsLoaded(true);
         })
         .catch(error => {
@@ -114,8 +145,11 @@ const Detail = () => {
             <p><b>Number of downloads:</b> {book.download_count}</p>
             <p><b>Category:</b> {category}</p>
             <p><b>Language:</b> {lang}</p>
-            <p><b>Link to the book in digital format:</b></p>
-            <Link to={book.formats["text/plain; charset=us-ascii"]}>Link</Link>
+            <p><b>Link to read the book in digital format:</b></p>
+            <Link to={book.formats["text/plain; charset=us-ascii"]}>Read</Link>
+            <p><b>Link to download the book in digital format:</b></p>
+            <Link to={book.formats["application/octet-stream"]}>Download</Link>
+            <p><b>Summaries:</b> {summaries}</p>
         </>
     )
 }
