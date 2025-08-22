@@ -8,6 +8,15 @@ const Favorite = () => {
   const [books, setBooks] = useState([]);
   const [dataIsLoaded, setDataIsLoaded] = useState(false);
 
+  const removeAll = () => {
+    const data = loadFavorites();
+    for(let i=0; i < data.length; i++)
+    {
+      removeFavorite(data[i].id);
+    }
+    setBooks(loadFavorites());
+  }
+
   // function to get data
   useEffect(() => {
     const data = loadFavorites();
@@ -32,7 +41,10 @@ const Favorite = () => {
         books.length > 0 ? 
         (
           <div>
-            <div>Favorite</div>
+            <div>
+              Favorite
+              <button onClick={() => {removeAll();}}>Remove all books</button>
+            </div>
             <p>Book List: {books.length}</p>
               <ul>
                   {
