@@ -8,6 +8,7 @@
     "build": "vite build --base=/gutendex-vite/",
     "lint": "eslint .",
     "preview": "vite preview",
+    "postbuild": "powershell -Command Copy-Item dist/index.html dist/404.html",
     "deploy" : "gh-pages -d dist"
   },
   "dependencies": {
