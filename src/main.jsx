@@ -17,11 +17,7 @@ const router = createBrowserRouter([
       { path: "book/:id", element: <Detail />}
     ],
   },
-],
-  {
-    // "/" у dev, "/<repo>" на проді
-    basename: import.meta.env.BASE_URL.replace(/\/$/, ""),
-  }
+]
 );
 
 createRoot(document.getElementById('root')).render(
