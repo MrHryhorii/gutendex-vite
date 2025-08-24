@@ -23,7 +23,8 @@ const Detail = () => {
     // get string with author names
     const getAuthors = (book) => {
         let names = "";
-        const arr = book.authors;
+        const arr = book.authors || [];
+        if (!arr.length) return '---';
 
         for(let i = 0; i < arr.length; i++)
         {
@@ -42,7 +43,8 @@ const Detail = () => {
     // get categories
     const getCategories = (book) => {
         let category = "";
-        const arr = book.bookshelves;
+        const arr = book.bookshelves || [];
+        if (!arr.length) return '---';
 
         for(let i = 0; i < arr.length; i++)
         {
@@ -61,7 +63,8 @@ const Detail = () => {
     // get languages
     const getLanguages = (book) => {
         let lang = "";
-        const arr = book.languages;
+        const arr = book.languages || [];
+        if (!arr.length) return '---';
 
         for(let i = 0; i < arr.length; i++)
         {
@@ -80,7 +83,8 @@ const Detail = () => {
     // get summaries
     const getSummaries = (book) => {
         let summ = "";
-        const arr = book.summaries;
+        const arr = book.summaries || [];
+        if (!arr.length) return '---';
 
         for(let i = 0; i < arr.length; i++)
         {
@@ -106,6 +110,21 @@ const Detail = () => {
 
         return summ;
     }
+
+    // read link
+    const readUrl =
+    book.formats?.["text/html; charset=utf-8"] ||
+    book.formats?.["text/html"] ||
+    book.formats?.["text/plain; charset=utf-8"] ||
+    book.formats?.["text/plain; charset=us-ascii"] ||
+    book.formats?.["text/plain"] || "";
+
+    // download link
+    const downloadUrl =
+    book.formats?.["application/epub+zip"] ||
+    book.formats?.["application/x-mobipocket-ebook"] ||
+    book.formats?.["application/octet-stream"] ||
+    readUrl;
 
     // function to get data
     useEffect(() => {
@@ -145,29 +164,49 @@ const Detail = () => {
     // Main Content
     return (
         <>
-            <div>Detail</div>
-            <p><b>Title:</b> {book.title}</p>
-            <img src={book.formats["image/jpeg"]} alt="Cover" />
+            {/* Head */}
+            <div className="book-head">
+                <h1 className="title">{book.title}</h1>
+                <div className="controls head-actions">
+                    {favBtn ? (
+                    <button className="btn" onClick={() => { removeFavorite(book.id); setFavBtn(v => !v); }}>
+                        Remove from favorite
+                    </button>
+                    ) : (
+                    <button className="btn" onClick={() => { onToggle(book); setFavBtn(v => !v); }}>
+                        Add to favorite
+                    </button>
+                    )}
 
-            {
-                favBtn ? 
-                (
-                    <button onClick={() => {removeFavorite(book.id); setFavBtn(v => !v)}}>Remove from favorite</button>
-                ) : 
-                (
-                    <button onClick={() => {onToggle(book); setFavBtn(v => !v)}}>Add to favorite</button>
-                )
-            }
+                    {readUrl && (
+                    <a className="btn" href={readUrl} target="_blank" rel="noreferrer">Read</a>
+                    )}
+                    {downloadUrl && (
+                    <a className="btn" href={downloadUrl} target="_blank" rel="noreferrer">Download</a>
+                    )}
+                </div>
+            </div>
+            {/* Two-column body */}
+            <div className="book-body">
+                <div className="book-media">
+                    {book.formats?.["image/jpeg"] ? (
+                    <img className="cover" src={book.formats["image/jpeg"]} alt={`Cover of ${book.title}`} />
+                    ) : (
+                    <div className="notice">No cover</div>
+                    )}
+                </div>
 
-            <p><b>Author:</b> {author}</p>
-            <p><b>Number of downloads:</b> {book.download_count}</p>
-            <p><b>Category:</b> {category}</p>
-            <p><b>Language:</b> {lang}</p>
-            <p><b>Link to read the book in digital format:</b></p>
-            <Link to={book.formats["text/plain; charset=us-ascii"]}>Read</Link>
-            <p><b>Link to download the book in digital format:</b></p>
-            <Link to={book.formats["application/octet-stream"]}>Download</Link>
-            <p><b>Summaries:</b> {summaries}</p>
+                <div className="book-meta">
+                    <p><b>Author:</b> {author}</p>
+                    <p><b>Number of downloads:</b> {book.download_count}</p>
+                    <p><b>Category:</b> {category}</p>
+                    <p><b>Language:</b> {lang}</p>
+                </div>
+            </div>
+            {/* Summary */}
+            <div style={{ marginTop: 16 }}>
+                <p><b>Summaries:</b> {summaries}</p>
+            </div>
         </>
     )
 }

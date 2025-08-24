@@ -15,6 +15,8 @@ const Home = () => {
     const [urlData, setUrlData] = useState("https://gutendex.com/books");
     // search link for name
     const [nameLink, setNameLink] = useState("");
+    // error message
+    const [error, setError] = useState("");
 
 
     // category
@@ -22,38 +24,45 @@ const Home = () => {
     // category helper
     const byCategory = (c) => {
         let tag = c.trim();
-        setUrlData("https://gutendex.com/books?search=" + tag);
+        setUrlData(tag ? `https://gutendex.com/books?search=${tag}` : "https://gutendex.com/books");
     };
+    // show category result
+    const [cat, setCat] = useState("All");
     // create category buttons
     const catButtons = () => {
         return (
-            <div>
-                <button onClick={() => {
+            <div className="chips">
+                <button 
+                    className="chip"
+                    aria-pressed={cat === "All"}
+                    onClick={() => {
                         byCategory("");
                         setCat("All");
                     }
                     }>All</button>
-                {categories.map(cat => (
+                {categories.map(name => (
                     <button
-                        key={cat}
+                        className="chip"
+                        aria-pressed={cat === name}
+                        key={name}
                         onClick={() => {
-                            byCategory(cat);
-                            setCat(cat);
+                            byCategory(name);
+                            setCat(name);
                             }
                         }
-                        >{cat}</button>
+                        >{name}</button>
                     ))
                 }
             </div>
         );
     };
-    // show category result
-    const [cat, setCat] = useState("All");
+    
 
     
     // function to get data
     useEffect(() => {
         setDataIsLoaded(false);
+        setError("");
         fetch(urlData)
         .then(response => response.json())
         .then(data => {
@@ -66,9 +75,11 @@ const Home = () => {
         .catch(error => {
             // Handle any errors
             console.error('Error:', error);
+            setError("Failed to load books. Please try again.");
         });
     }, [urlData]); // do on url data change
     // no data content
+    if (error) return <p>{error}</p>;
     if (!dataIsLoaded) {
         return (
             <div>
@@ -80,40 +91,53 @@ const Home = () => {
     // show if we have data
     return (
         <>
-            <div>Home</div>
             <div>
+                <div className="toolbar">
                 {/* Next and Previous buttons */}
-                <div>
-                    {pages.previous && (
-                        <button onClick={() => setUrlData(pages.previous)}>Previous</button>
-                    )}
-                    {pages.next && (
-                        <button onClick={() => setUrlData(pages.next)}>Next</button>
-                    )}
+                <div className="controls">
+                    <button className="btn" disabled={!pages.previous} onClick={() => setUrlData(pages.previous)}>Previous</button>
+                    <button className="btn" disabled={!pages.next} onClick={() => setUrlData(pages.next)}>Next</button>
                 </div>
                 {/* Search field and button */}
-                <div>
+                <div className="controls">
                     <input
+                        className="input"
                         placeholder="Search…"
                         value={nameLink}
                         onChange={e => setNameLink(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                const q = nameLink.trim().toLowerCase();
+                                setUrlData(q ? `https://gutendex.com/books?search=${q}` : "https://gutendex.com/books");
+                            }
+                        }}
                     />
-                    <button onClick={() => setUrlData("https://gutendex.com/books?search=" + nameLink.trim().toLowerCase())}>Find!</button>
+                    <button className="btn" onClick={() => {
+                        const q = nameLink.trim().toLowerCase();
+                        setUrlData(q ? `https://gutendex.com/books?search=${q}` : "https://gutendex.com/books");
+                    }}>Find!</button>
                 </div>
+                </div>
+                {/* Number with result data */}
+                <p className="notice">Results: {new Intl.NumberFormat().format(count)} (showing {books.length})</p>
                 {/* Category menu */}
-                <p>Category menu</p>
                 {catButtons()}
                 
                 {/* BOOKS */}
                 {/* Array with return data */}
-                <p>Book List: {cat} - {count}, On page - {books.length}</p>
-                <ul>
+                {!books.length && (
+                    <p className="notice">No books found. Try another query or category.</p>
+                )}
+                <ul className="list">
                     {
                         books.map(book => (
                             <li key={book.id}>
                                 <Link to={`/book/${book.id}`}>
                                     {book.title}
                                 </Link>
+                                {Array.isArray(book.authors) && book.authors.length > 0 && (
+                                    <span className="notice"> — {book.authors.map(a => a?.name).filter(Boolean).join('; ')}</span>
+                                )}
                             </li>
                         ))
                     }
